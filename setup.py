@@ -41,6 +41,14 @@ print(Iro([
 for h in range(256):
     print(Iro([RGBColor(*map(lambda x: x * 255, hls_to_rgb(h / 256, 0.7, 1)), bg=True), ' '], disable_rgb=False), end='')
 ```
+
+**output**
+![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture1.png?raw=true)
+
+# Installation
+
+    $ pip install iro
+
 """
 
 from setuptools import setup

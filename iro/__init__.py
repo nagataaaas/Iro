@@ -8,7 +8,7 @@
 import locale
 
 from .__about__ import __version__
-from .iro import (Iro, Color, Style, RGBColor, Color256)
+from .iro import (Iro, Color, Style, RGBColor, Color256, Font)
 
 
 locale.setlocale(locale.LC_ALL, '')
@@ -20,4 +20,5 @@ __all__ = [
     "Style",
     "RGBColor",
     "Color",
+    "Font",
 ]

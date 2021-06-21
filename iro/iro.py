@@ -7,12 +7,14 @@ from typing import Iterable, List
 
 
 class Iro:
-    def __init__(self, text: Iterable, disable_rgb=True):
+    def __init__(self, text: Iterable, disable_rgb: bool = True):
         self.disable_rgb = disable_rgb
 
         self.text = self.painter(text)
 
-    def painter(self, texts: Iterable):
+    def painter(self, texts: Iterable, style=None):
+        if style is None:
+            style = ''
         styles = []
         result = []
         text_pool = []
@@ -22,7 +24,7 @@ class Iro:
                 styles.append(elem)
             else:
                 text_pool.append(elem)
-        open_style = self.open_styles(styles)
+        open_style = style + self.open_styles(styles)
         result.append(open_style)
 
         for text in text_pool:
@@ -31,7 +33,7 @@ class Iro:
             elif isinstance(text, Iro):
                 result.append(text.text)
             else:
-                result.append(self.painter(text))
+                result.append(self.painter(text, open_style))
                 result.append(open_style)
         result.append(Style._RESET.close())
 
@@ -85,6 +87,9 @@ class Font:
 
     def close(self):
         return '\033[10m'
+
+    def __repr__(self):
+        return 'Font(font_number={})'.format(self.font_number)
 
 
 class Style(Enum):
@@ -189,7 +194,7 @@ class Color256:
         self.color = color
         self.bg = bg
 
-    def __str__(self):
+    def __repr__(self):
         return 'Color256(color={}, value="#{:02x}{:02x}{:02x}", bg={})'.format(self.color,
                                                                                self.color_map[self.color][0],
                                                                                self.color_map[self.color][1],
@@ -198,14 +203,16 @@ class Color256:
 
 
 class RGBColor:
-    def __init__(self, r: int, g: int, b: int, bg=False):
+    def __init__(self, r: int, g: int, b: int, bg: bool = False):
         self.r = round(r)
         self.g = round(g)
         self.b = round(b)
         self.bg = bg
+        if not 0 <= self.r <= 255 or not 0 <= self.g <= 255 or not 0 <= self.b <= 255:
+            raise ValueError('Given number is invalid. must be between 0 and 255')
 
     @classmethod
-    def from_color_code(cls, color_code: str, bg=False):
+    def from_color_code(cls, color_code: str, bg: bool = False):
         color_code = color_code.lstrip('#')
         if len(color_code) != 6:
             raise ValueError("length of `color_code` must be 6.")
@@ -227,6 +234,9 @@ class RGBColor:
 
     def close(self):
         return '\033[{}9m'.format(4 if self.bg else 3)
+
+    def __repr__(self):
+        return 'RGBColor(r={}, g={}, b={}, bg={})'.format(self.r, self.g, self.b, self.bg)
 
 
 class Color(Enum):
