@@ -19,6 +19,6 @@ __all__ = [
     "Color",
     "Style",
     "ColorRGB",
-    "Color",
+    "Color256",
     "Font",
 ]
