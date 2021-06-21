@@ -7,24 +7,129 @@ from typing import Iterable, List
 
 
 class Iro:
-    def __init__(self, *text: Iterable, disable_rgb: bool = True):
+    def __init__(self, *text: Iterable, disable_rgb: bool = True, optimize_level: int = 0):
         self.disable_rgb = disable_rgb
+        self.optimize_level = optimize_level
 
-        self.text = self.painter(text)
+        self.text = self.painter(text) + Style.RESET.open()
 
-    def painter(self, texts: Iterable, style=None):
-        if style is None:
-            style = ''
-        styles = []
+    def painter(self, texts: Iterable, given_style=None):
+        if given_style is None:
+            """
+            1: font, 
+            2: intensity, (bold, dim)
+            3: italic,
+            4: underline,
+            5: blink,
+            6: invert,
+            7: hide,
+            8: strike,
+            9: overline,
+            10: fg_color, 
+            11: bg_color
+            """
+            if self.optimize_level == 0:
+                given_style = []
+                style = []
+            elif self.optimize_level == 1:
+                given_style = [None] * 11
+                style = [None] * 11
+        else:
+            style = given_style[:]
         result = []
         text_pool = []
 
         for elem in texts:
             if isinstance(elem, (Font, Style, Color, Color256, ColorRGB)):
-                styles.append(elem)
+                if self.optimize_level == 0:
+                    style.append(elem)
+                elif self.optimize_level == 1:
+                    if isinstance(elem, Font):  # FONT
+                        if elem.font_number == 0:
+                            style[0] = None
+                            continue
+                        style[0] = elem
+                    elif elem == Style.BLACKLETTER_FONT:
+                        style[0] = elem
+
+                    elif elem in (Style.BOLD, Style.DIM):  # INTENSITY
+                        style[1] = elem
+                    elif elem in (Style.OFF_BOLD, Style.OFF_DIM, Style.OFF_INTENSITY):
+                        style[1] = None
+
+                    elif elem == Style.ITALIC:  # ITALIC
+                        style[2] = elem
+                    elif elem == Style.OFF_ITALIC:
+                        style[2] = None
+
+                    elif elem in (Style.UNDERLINE, Style.DOUBLY_UNDERLINE):  # UNDERLINE
+                        style[3] = elem
+                    elif elem == Style.OFF_UNDERLINE:
+                        style[3] = None
+
+                    elif elem in (Style.SLOW_BLINK, Style.RAPID_BLINK):  # BLINK
+                        style[4] = elem
+                    elif elem == Style.OFF_BLINK:
+                        style[4] = None
+
+                    elif elem == Style.INVERT:  # INVERT
+                        style[5] = elem
+                    elif elem == Style.OFF_INVERT:
+                        style[5] = None
+
+                    elif elem == Style.HIDE:  # HIDE
+                        style[6] = elem
+                    elif elem == Style.OFF_HIDE:
+                        style[6] = None
+
+                    elif elem == Style.STRIKE:  # STRIKE
+                        style[7] = elem
+                    elif elem == Style.OFF_STRIKE:
+                        style[7] = None
+
+                    elif elem == Style.OVERLINE:  # OVERLINE
+                        style[8] = elem
+                    elif elem == Style.OFF_OVERLINE:
+                        style[8] = None
+
+                    elif elem == Style.RESET:  # RESET
+                        style = [None] * 11
+
+                    elif elem == Style.OFF_COLOR:  # OFF COLOR
+                        style[9] = None
+                    elif elem == Style.OFF_BG_COLOR:
+                        style[10] = None
+
+                    else:  # COLOR
+                        if isinstance(elem, Color):
+                            if elem.name.startswith('BG_'):
+                                style[10] = elem
+                            else:
+                                style[9] = elem
+                        else:
+                            if elem.bg:
+                                style[10] = elem
+                            else:
+                                style[9] = elem
             else:
                 text_pool.append(elem)
-        open_style = style + self.open_styles(styles)
+
+        open_style = ''
+        if self.optimize_level == 0:
+            open_style = self.open_styles(style)
+        if self.optimize_level == 1:
+            open_styles = []
+            for given, parsed in zip(given_style, style):
+                if parsed is None:
+                    if given is None:
+                        continue
+                    open_styles.append(given.close())
+                else:
+                    if given == parsed:
+                        continue
+                    open_styles.append(parsed.open())
+            open_style = ''.join(open_styles)
+
         result.append(open_style)
 
         for text in text_pool:
@@ -33,19 +138,46 @@ class Iro:
             elif isinstance(text, Iro):
                 result.append(text.text)
             else:
-                result.append(self.painter(text, open_style))
-                result.append(open_style)
-        result.append(Style._RESET.close())
+                result.append(self.painter(text, style))
+                if self.optimize_level == 0:
+                    result.append(open_style)
+
+        if self.optimize_level == 0:
+            result.append(self.close_styles(style))
+
+        elif self.optimize_level == 1:
+            for given, parsed in zip(given_style, style):
+                if given is None:
+                    if parsed is None:
+                        continue
+                    result.append(parsed.close())
+                else:
+                    if given == parsed:
+                        continue
+                    result.append(given.open())
 
         return ''.join(result)
 
     def open_styles(self, styles: List):
         result = []
         for style in styles:
+            if style is None:
+                continue
             if isinstance(style, ColorRGB) and self.disable_rgb:
                 result.append(style.to_close_c256().open())
                 continue
             result.append(style.open())
+        return ''.join(result)
+
+    def close_styles(self, styles: List):
+        result = []
+        for style in styles:
+            if style is None:
+                continue
+            if isinstance(style, ColorRGB) and self.disable_rgb:
+                result.append(style.to_close_c256().close())
+                continue
+            result.append(style.close())
         return ''.join(result)
 
     def __add__(self, other):
@@ -66,7 +198,9 @@ class Iro:
         return self.text
 
     def __repr__(self):
-        return 'Iro(text={}, disable_rgb={})'.format(repr(self.text), self.disable_rgb)
+        return 'Iro(text={}, disable_rgb={}, optimize_level={})'.format(repr(self.text),
+                                                                        self.disable_rgb,
+                                                                        self.optimize_level)
 
 
 class Font:
@@ -93,7 +227,7 @@ class Font:
 
 
 class Style(Enum):
-    _RESET = 0
+    RESET = 0
     BOLD = 1
     DIM = 2
     ITALIC = 3
@@ -103,17 +237,33 @@ class Style(Enum):
     INVERT = 7
     HIDE = 8
     STRIKE = 9
+    OVERLINE = 53
 
     BLACKLETTER_FONT = 20
 
     DOUBLY_UNDERLINE = 21
 
+    OFF_INTENSITY = 22
+    OFF_BOLD = 22
+    OFF_DIM = 22
+    OFF_ITALIC = 23
+    OFF_UNDERLINE = 24
+    OFF_BLINK = 25
+    OFF_INVERT = 27
+    OFF_HIDE = 28
+    OFF_STRIKE = 29
+
+    OFF_COLOR = 39
+    OFF_BG_COLOR = 49
+
+    OFF_OVERLINE = 55
+
     def open(self):
         return '\033[{}m'.format(self.value)
 
     def close(self):
-        val = {0: 0, 1: 22, 2: 22, 3: 23, 4: 24, 5: 25, 6: 25, 7: 27, 8: 28, 9: 29}
-        return '\033[{}m'.format(val[self.value])
+        val = {1: 22, 2: 22, 3: 23, 4: 24, 5: 25, 6: 25, 7: 27, 8: 28, 9: 29, 20: 10, 21: 24}
+        return '\033[{}m'.format(val.get(self.value, self.value))
 
 
 class Color256:

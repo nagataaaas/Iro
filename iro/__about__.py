@@ -1,7 +1,7 @@
 __title__ = "Iro"
 __description__ = "Easy and powerful Colorizer for Python!"
 __url__ = "https://github.com/nagataaaas/Iro"
-__version_info__ = ("0", "5", "0")
+__version_info__ = ("0", "7", "0")
 __version__ = ".".join(__version_info__)
 __author__ = "Yamato Nagata"
 __author_email__ = "chickenwingswillfly@gmail.com"

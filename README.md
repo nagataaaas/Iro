@@ -50,13 +50,20 @@ for h in range(256):
     $ pip install iro
 
 # Document
-## `Iro(text: Iterable, disable_rgb: bool = True)`
+## `Iro(text: Iterable, disable_rgb: bool = True, optimize_level: int = 0)`
 - text: Iterable of `str`, `Style`, `Color`, `Color256`, `ColorRGB`, `Font` and `Iro`.
 - disable_rgb: if `True`, `ColorRGB` will be converted to similar color of `Color256`. `ColorRGB` is not supported in some Terminals.
+- optimize_level: `0` or `1`. if `0`, none of the optimizations will be performed, 
+and each time at the border of the block, 
+a reset and application of all the set styles will be performed. 
+if `1`, at the border of the block, only the style that has changed will be modified. However, this may not work correctly for some consoles, and is not recommended if the console being run is unspecified or unknown.
+
+`Iro().text` to fetch result.
 
 ## Style
 Enum of defined `Styling`.
 
+    RESET
     BOLD 
     DIM 
     ITALIC 
@@ -68,7 +75,25 @@ Enum of defined `Styling`.
     STRIKE 
     BLACKLETTER_FONT 
     DOUBLY_UNDERLINE 
+
+    OFF_INTENSITY
+    OFF_BOLD
+    OFF_DIM
+    OFF_ITALIC
+    OFF_UNDERLINE
+    OFF_BLINK
+    OFF_INVERT
+    OFF_HIDE
+    OFF_STRIKE
+
+    OFF_COLOR
+    OFF_BG_COLOR
     
+    OFF_OVERLINE
+    
+> ## Note!
+> `OFF_BOLD` and `OFF_DIM` are made for consistency with the Enum to enable styles, which is actually `OFF_INTENSITY`.\
+> Therefore, `OFF_BOLD` will also disable `DIM`.
 ## Color
 Enum of 3-bit and 4-bit color.
 
@@ -137,9 +162,59 @@ In terms of portability, this is how most coloring should be done.
 ### Coloring, Styling and Fonts are not working!
 > Not all features are supported in every console. Try another one.
 
-### Weird string like `[0m[0m[5m[48;2;168;102;255m [0m[0m[5m` are showing up and not working at all!
+### Weird string like `･[0m･[0m･[5m･[48;2;168;102;255m ･[0m･[0m･[5m` are showing up and not working at all!
 > Your console is not supporting ANSI escape sequences. Try another console. Or, you can try `colorama`.\
 > insert this code below in your Script
 >
     from colorama import init
     init()
+    
+### How effective is optimization?
+> ok, Let me show some codes and screenshots.\
+> The two codes below are all the same except for the `optimize_level`, and the output is equivalent.
+```python
+value = [
+    Color.RED, "[RED]",
+    [
+        Style.UNDERLINE, "[RED/UNDERLINE]",
+        [
+            Style.BOLD, Color.GREEN, "[GREEN/UNDERLINE/BOLD]",
+            [
+                Style.INVERT, "[GREEN/UNDERLINE/BOLD/INVERT]",
+                [
+                    Style.OFF_BOLD, "[GREEN/UNDERLINE/INVERT]"
+                ]
+            ],
+            "[GREEN/UNDERLINE/BOLD]"
+        ],
+        "[RED/UNDERLINE]"
+    ]
+]
+print(Iro(value, optimize_level=1))
+print(Iro(value, optimize_level=0))
+```
+> output is below
+
+![output](https://github.com/nagataaaas/Iro/blob/main/assets/compare1.png?raw=true)
+
+> Now, let's how optimization worked.
+
+```python
+print(repr(Iro(value, optimize_level=1).text))
+# '\x1b[31m[RED]\x1b[4m[RED/UNDERLINE]\x1b[1m\x1b[32m[GREEN/UNDERLINE/BOLD]\x1b[7m[GREEN/UNDERLINE/BOLD/INVERT]
+# \x1b[22m[GREEN/UNDERLINE/INVERT]\x1b[1m\x1b[27m[GREEN/UNDERLINE/BOLD]\x1b[22m\x1b[31m[RED/UNDERLINE]
+# \x1b[24m\x1b[39m\x1b[0m'
+
+print(repr(Iro(value, optimize_level=0).text))
+# '\x1b[31m[RED]\x1b[31m\x1b[4m[RED/UNDERLINE]\x1b[31m\x1b[4m\x1b[1m\x1b[32m[GREEN/UNDERLINE/BOLD]
+# \x1b[31m\x1b[4m\x1b[1m\x1b[32m\x1b[7m[GREEN/UNDERLINE/BOLD/INVERT]
+# \x1b[31m\x1b[4m\x1b[1m\x1b[32m\x1b[7m\x1b[22m[GREEN/UNDERLINE/INVERT]
+# \x1b[39m\x1b[24m\x1b[22m\x1b[39m\x1b[27m\x1b[22m\x1b[31m\x1b[4m\x1b[1m\x1b[32m\x1b[7m\x1b[39m\x1b
+# [24m\x1b[22m\x1b[39m\x1b[27m\x1b[31m\x1b[4m\x1b[1m\x1b[32m[GREEN/UNDERLINE/BOLD]
+# \x1b[39m\x1b[24m\x1b[22m\x1b[39m\x1b[31m\x1b[4m[RED/UNDERLINE]
+# \x1b[39m\x1b[24m\x1b[31m\x1b[39m\x1b[0m'
+```
+
+> Each time the nest depth changes, all previously applied styles will be fully applied in order, even if there is an overriding application. This almost guarantees that it will work, but it is by no means efficient.\
+> On the other hand, if `optimize_level` is `1`, it will try to use escape sequences only when there is a style change.\
+>This is more effective when nesting is deep or when nesting is frequent.
