@@ -7,7 +7,7 @@ from typing import Iterable, List
 
 
 class Iro:
-    def __init__(self, *text: Iterable, disable_rgb=True):
+    def __init__(self, text: Iterable, disable_rgb=True):
         self.disable_rgb = disable_rgb
 
         self.text = self.painter(text)

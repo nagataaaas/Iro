@@ -23,10 +23,12 @@ print(warning, 'maybe something wrong.')
 print(deprecated, 'this function is deprecated.')
 
 print(Iro([
-    Color.RED, "Off course, You can nest styles. ", [
+    Color.RED, "Off course, You can nest styles. ", 
+    [
         Style.ITALIC,
         "This is RED and ITALIC. "
-    ], [
+    ], 
+    [
         Color.BLUE,
         Color.BG_BRIGHT_YELLOW,
         Style.UNDERLINE,
@@ -38,3 +40,8 @@ print(Iro([
 for h in range(256):
     print(Iro([RGBColor(*map(lambda x: x * 255, hls_to_rgb(h / 256, 0.7, 1)), bg=True), ' '], disable_rgb=False), end='')
 ```
+**output**
+![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture1.png?raw=true)
+
+# Document
+## Iro(texts)
