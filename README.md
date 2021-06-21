@@ -214,7 +214,7 @@ print(repr(Iro(value, optimize_level=0).text))
 # \x1b[39m\x1b[24m\x1b[22m\x1b[39m\x1b[31m\x1b[4m[RED/UNDERLINE]
 # \x1b[39m\x1b[24m\x1b[31m\x1b[39m\x1b[0m'
 ```
-
+> This is Huge difference!\
 > Each time the nest depth changes, all previously applied styles will be fully applied in order, even if there is an overriding application. This almost guarantees that it will work, but it is by no means efficient.\
 > On the other hand, if `optimize_level` is `1`, it will try to use escape sequences only when there is a style change.\
 >This is more effective when nesting is deep or when nesting is frequent.
