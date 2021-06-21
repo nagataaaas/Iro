@@ -28,6 +28,8 @@ class Iro:
         for text in text_pool:
             if isinstance(text, str):
                 result.append(text)
+            elif isinstance(text, Iro):
+                result.append(text.text)
             else:
                 result.append(self.painter(text))
                 result.append(open_style)
