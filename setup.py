@@ -9,12 +9,12 @@ Powered by [Yamato Nagata](https://twitter.com/514YJ)
 [GitHub](https://github.com/nagataaaas/Iro)
 
 ```python
-from iro import Iro, Color, Style, RGBColor, Color256
+from iro import Iro, Color, Style, ColorRGB, Color256
 
 from colorsys import hls_to_rgb
 
 success = Iro((Color.GREEN, "[  SUCCESS ]"))
-error = Iro((Color.WHITE, Style.DOUBLY_UNDERLINE, RGBColor(255, 0, 0, bg=True), "[   ERROR  ]"), disable_rgb=False)
+error = Iro((Color.WHITE, Style.DOUBLY_UNDERLINE, ColorRGB(255, 0, 0, bg=True), "[   ERROR  ]"), disable_rgb=False)
 warning = Iro((Color.YELLOW, Color256(255, bg=True), "[  WARNING ]"))
 deprecated = Iro((Color256(7), Color256(239, True), Style.STRIKE, "[DEPRECATED]"))
 
@@ -39,7 +39,7 @@ print(Iro([
 ]))
 
 for h in range(256):
-    print(Iro([RGBColor(*map(lambda x: x * 255, hls_to_rgb(h / 256, 0.7, 1)), bg=True), ' '], disable_rgb=False), end='')
+    print(Iro([ColorRGB(*map(lambda x: x * 255, hls_to_rgb(h / 256, 0.7, 1)), bg=True), ' '], disable_rgb=False), end='')
 ```
 
 **output**

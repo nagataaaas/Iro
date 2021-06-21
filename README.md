@@ -10,12 +10,12 @@ Powered by [Yamato Nagata](https://twitter.com/514YJ)
 The depth represents a block and affects all elements within that block.
 
 ```python
-from iro import Iro, Color, Style, RGBColor, Color256
+from iro import Iro, Color, Style, ColorRGB, Color256
 
 from colorsys import hls_to_rgb
 
 success = Iro((Color.GREEN, "[  SUCCESS ]"))
-error = Iro((Color.WHITE, Style.DOUBLY_UNDERLINE, RGBColor(255, 0, 0, bg=True), "[   ERROR  ]"), disable_rgb=False)
+error = Iro((Color.WHITE, Style.DOUBLY_UNDERLINE, ColorRGB(255, 0, 0, bg=True), "[   ERROR  ]"), disable_rgb=False)
 warning = Iro((Color.YELLOW, Color256(255, bg=True), "[  WARNING ]"))
 deprecated = Iro((Color256(7), Color256(239, True), Style.STRIKE, "[DEPRECATED]"))
 
@@ -40,7 +40,7 @@ print(Iro([
 ]))
 
 for h in range(256):
-    print(Iro([RGBColor(*map(lambda x: x * 255, hls_to_rgb(h / 256, 0.7, 1)), bg=True), ' '], disable_rgb=False), end='')
+    print(Iro([ColorRGB(*map(lambda x: x * 255, hls_to_rgb(h / 256, 0.7, 1)), bg=True), ' '], disable_rgb=False), end='')
 ```
 **output**
 ![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture1.png?raw=true)
@@ -51,8 +51,8 @@ for h in range(256):
 
 # Document
 ## `Iro(text: Iterable, disable_rgb: bool = True)`
-- text: Iterable of `str`, `Style`, `Color`, `Color256`, `RGBColor`, `Font` and `Iro`.
-- disable_rgb: if `True`, `RGBColor` will be converted to similar color of `Color256`. `RGBColor` is not supported in some Terminals.
+- text: Iterable of `str`, `Style`, `Color`, `Color256`, `ColorRGB`, `Font` and `Iro`.
+- disable_rgb: if `True`, `ColorRGB` will be converted to similar color of `Color256`. `ColorRGB` is not supported in some Terminals.
 
 ## Style
 Enum of defined `Styling`.
@@ -116,11 +116,11 @@ In terms of portability, this is how most coloring should be done.
 - number: number of pre-defined 8-bit color. `0 <= number <= 255`
 - bg: if `True`, This color will be applied to background.
 
-## RGBColor(r: int, g: int, b: int, bg: bool = False)
+## ColorRGB(r: int, g: int, b: int, bg: bool = False)
 - r, g, b: value of RGB. if `float` is given, number will be `round`ed. `0 <= number <= 255`
 - bg: if `True`, This color will be applied to background.
 
-### RGBColor.from_color_code(color_code: str, bg: bool = False)
+### ColorRGB.from_color_code(color_code: str, bg: bool = False)
 - color_code: `str` that matches to regex `#?[0-9a-fA-F]{6}`
 - bg: if `True`, This color will be applied to background.
 
@@ -128,11 +128,11 @@ In terms of portability, this is how most coloring should be done.
 - font_number: number of font. `0` is default font. up to `10`.
 
 # Q&A
-### My `RGBColor` and `Color256` is not working!
+### My `ColorRGB` and `Color256` is not working!
 > The problem is most likely caused by the console not supporting it. Please check.
 
-### My `RGBColor` is not the color that I specified!
-> If `disable_rgb` is `True`, `Iro` will convert every `RGBColor` to similar `Color256`. Make sure `disable_rgb` is set to `False`.
+### My `ColorRGB` is not the color that I specified!
+> If `disable_rgb` is `True`, `Iro` will convert every `ColorRGB` to similar `Color256`. Make sure `disable_rgb` is set to `False`.
 
 ### Coloring, Styling and Fonts are not working!
 > Not all features are supported in every console. Try another one.

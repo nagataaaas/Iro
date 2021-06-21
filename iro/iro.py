@@ -20,7 +20,7 @@ class Iro:
         text_pool = []
 
         for elem in texts:
-            if isinstance(elem, (Font, Style, Color, Color256, RGBColor)):
+            if isinstance(elem, (Font, Style, Color, Color256, ColorRGB)):
                 styles.append(elem)
             else:
                 text_pool.append(elem)
@@ -42,7 +42,7 @@ class Iro:
     def open_styles(self, styles: List):
         result = []
         for style in styles:
-            if isinstance(style, RGBColor) and self.disable_rgb:
+            if isinstance(style, ColorRGB) and self.disable_rgb:
                 result.append(style.to_close_c256().open())
                 continue
             result.append(style.open())
@@ -202,7 +202,7 @@ class Color256:
                                                                                self.bg)
 
 
-class RGBColor:
+class ColorRGB:
     def __init__(self, r: int, g: int, b: int, bg: bool = False):
         self.r = round(r)
         self.g = round(g)
@@ -217,7 +217,7 @@ class RGBColor:
         if len(color_code) != 6:
             raise ValueError("length of `color_code` must be 6.")
         r, g, b = int(color_code[:2], 16), int(color_code[2:4], 16), int(color_code[4:], 16)
-        return RGBColor(r, g, b, bg)
+        return ColorRGB(r, g, b, bg)
 
     def to_close_c256(self) -> Color256:
         min_diff = float('inf')
@@ -236,7 +236,7 @@ class RGBColor:
         return '\033[{}9m'.format(4 if self.bg else 3)
 
     def __repr__(self):
-        return 'RGBColor(r={}, g={}, b={}, bg={})'.format(self.r, self.g, self.b, self.bg)
+        return 'ColorRGB(r={}, g={}, b={}, bg={})'.format(self.r, self.g, self.b, self.bg)
 
 
 class Color(Enum):
