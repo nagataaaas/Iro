@@ -1,3 +1,6 @@
+# v0.5.0
+- fixed `Color256` not in `__init__.all`
+
 # v0.4.0
 - fixed error on `from iro import *`
 
