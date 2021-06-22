@@ -201,8 +201,9 @@ print(Iro(value, optimize_level=0))
 
 ```python
 print(repr(Iro(value, optimize_level=1).text))
-# '\x1b[31m[RED]\x1b[4m[RED/UNDERLINE]\x1b[1m\x1b[32m[GREEN/UNDERLINE/BOLD]\x1b[7m[GREEN/UNDERLINE/BOLD/INVERT]
-# \x1b[22m[GREEN/UNDERLINE/INVERT]\x1b[1m\x1b[27m[GREEN/UNDERLINE/BOLD]\x1b[22m\x1b[31m[RED/UNDERLINE]
+# '\x1b[31m[RED]\x1b[4m[RED/UNDERLINE]\x1b[1m\x1b[32m[GREEN/UNDERLINE/BOLD]
+# \x1b[7m[GREEN/UNDERLINE/BOLD/INVERT]\x1b[22m[GREEN/UNDERLINE/INVERT]
+# \x1b[1m\x1b[27m[GREEN/UNDERLINE/BOLD]\x1b[22m\x1b[31m[RED/UNDERLINE]
 # \x1b[24m\x1b[39m\x1b[0m'
 
 print(repr(Iro(value, optimize_level=0).text))
