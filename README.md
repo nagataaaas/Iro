@@ -170,7 +170,7 @@ In terms of portability, this is how most coloring should be done.
     init()
     
 ### How effective is optimization?
-> ok, Let me show some codes and screenshots.\
+> ok, Let me show some codes and screenshot.\
 > The two codes below are all the same except for the `optimize_level`, and the output is equivalent.
 ```python
 value = [
@@ -197,7 +197,7 @@ print(Iro(value, optimize_level=0))
 
 ![output](https://github.com/nagataaaas/Iro/blob/main/assets/compare1.png?raw=true)
 
-> Now, let's how optimization worked.
+> Now, let's see how optimization worked.
 
 ```python
 print(repr(Iro(value, optimize_level=1).text))
