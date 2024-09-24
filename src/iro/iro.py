@@ -217,23 +217,25 @@ class Iro:
 
         return self._calc_sep(depth).join(result)
 
-    def open_styles(self, styles: List):
+    @staticmethod
+    def open_styles(styles: List, disable_rgb: bool):
         result = []
         for style in styles:
             if style is None:
                 continue
-            if isinstance(style, ColorRGB) and self.disable_rgb:
+            if isinstance(style, ColorRGB) and disable_rgb:
                 result.append(style.to_close_c256().open())
                 continue
             result.append(style.open())
         return ''.join(result)
 
-    def close_styles(self, styles: List):
+    @staticmethod
+    def close_styles(styles: List, disable_rgb: bool):
         result = []
         for style in styles:
             if style is None:
                 continue
-            if isinstance(style, ColorRGB) and self.disable_rgb:
+            if isinstance(style, ColorRGB) and disable_rgb:
                 result.append(style.to_close_c256().close())
                 continue
             result.append(style.close())
