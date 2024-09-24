@@ -16,22 +16,40 @@ class IroElement:
 
 
 class Iro:
-    def __init__(self, *text: Iterable, disable_rgb: bool = True, optimize_level: Literal[0, 1] = 0):
+    def __init__(self, *texts: Iterable, disable_rgb: bool = True, optimize_level: Literal[0, 1] = 0,
+                 sep: str | list[str] = ""):
+        """
+
+        :param texts: texts to colorize
+        :param disable_rgb: whether to disable RGB color or not
+        :param optimize_level: optimize level. 0: no optimization, 1: optimize
+        :param sep: separator between texts. if isinstance of str, it will be used as separator. if isinstance of Iterable[str], it will be used as separator for each depth.
+        """
         if optimize_level not in (0, 1):
             raise ValueError("`optimize_level` must be 0 or 1. given: {}".format(optimize_level))
 
         self.disable_rgb = disable_rgb
         self.optimize_level = optimize_level
+        self.sep = sep
 
-        self.text = self.painter(text) + Style.RESET.open()
+        self.text = self.painter(texts) + Style.RESET.open()
 
-    def painter(self, texts: Iterable, given_style=None):
+    def painter(self, texts: Iterable, given_style=None, depth=0):
+
         if self.optimize_level == 0:
-            return self.unoptimized_paint(texts, given_style)
+            return self.unoptimized_paint(texts, depth, given_style)
         if self.optimize_level == 1:
-            return self.optimized_paint(texts, given_style)
+            return self.optimized_paint(texts, depth, given_style)
 
-    def unoptimized_paint(self, texts: Iterable, given_style=None):
+    def _calc_sep(self, depth: int) -> str:
+        if isinstance(self.sep, str):
+            return self.sep
+        elif len(self.sep) > depth:
+            return self.sep[depth]
+
+        return ''
+
+    def unoptimized_paint(self, texts: Iterable, depth: int, given_style=None):
         if given_style is None:
             style = []
         else:
@@ -48,21 +66,30 @@ class Iro:
         open_style = self.open_styles(style)
 
         result.append(open_style)
+        visible_painted = False
+        sep = self._calc_sep(depth)
 
-        for text in text_pool:
+        for i, text in enumerate(text_pool):
+            if isinstance(text, IroElement):
+                continue
+
+            if visible_painted:
+                result.append(sep)
+
             if isinstance(text, str):
                 result.append(text)
             elif isinstance(text, Iro):
                 result.append(text.text)
             else:
-                result.append(self.painter(text, style))
+                result.append(self.painter(text, style, depth + 1))
                 result.append(open_style)
+            visible_painted = True
 
         result.append(self.close_styles(style))
 
         return ''.join(result)
 
-    def optimized_paint(self, texts: Iterable, given_style=None):
+    def optimized_paint(self, texts: Iterable, depth: int, given_style=None):
         if given_style is None:
             """
             1: font, 
@@ -176,7 +203,7 @@ class Iro:
             elif isinstance(text, Iro):
                 result.append(text.text)
             else:
-                result.append(self.painter(text, style))
+                result.append(self.painter(text, style, depth + 1))
 
         for given, parsed in zip(given_style, style):
             if given is None:
@@ -188,7 +215,7 @@ class Iro:
                     continue
                 result.append(given.open())
 
-        return ''.join(result)
+        return self._calc_sep(depth).join(result)
 
     def open_styles(self, styles: List):
         result = []
