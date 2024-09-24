@@ -1,7 +1,7 @@
 import math
 from abc import abstractmethod
 from enum import Enum
-from typing import Iterable, List
+from typing import Iterable, List, Literal
 from warnings import warn
 
 
@@ -16,7 +16,10 @@ class IroElement:
 
 
 class Iro:
-    def __init__(self, *text: Iterable, disable_rgb: bool = True, optimize_level: int = 0):
+    def __init__(self, *text: Iterable, disable_rgb: bool = True, optimize_level: Literal[0, 1] = 0):
+        if optimize_level not in (0, 1):
+            raise ValueError("`optimize_level` must be 0 or 1. given: {}".format(optimize_level))
+
         self.disable_rgb = disable_rgb
         self.optimize_level = optimize_level
 
@@ -25,9 +28,8 @@ class Iro:
     def painter(self, texts: Iterable, given_style=None):
         if self.optimize_level == 0:
             return self.unoptimized_paint(texts, given_style)
-        elif self.optimize_level == 1:
+        if self.optimize_level == 1:
             return self.optimized_paint(texts, given_style)
-        raise ValueError("optimize_level must be 0 or 1.")
 
     def unoptimized_paint(self, texts: Iterable, given_style=None):
         if given_style is None:
