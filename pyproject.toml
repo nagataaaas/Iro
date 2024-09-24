@@ -1,0 +1,32 @@
+[project]
+name = "iro"
+version = "1.0.0"
+description = "Easy and powerful Colorizer for Python!"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+license = { file = "LICENSE" }
+authors = [
+    { name = "Yamato Nagata", email = "nagata@nagata.pro" },
+]
+keywords = ["color", "colorize", "colorizer", "terminal", "console", "cli", "library", "tool"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Environment :: Other Environment",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Terminals",
+    "Topic :: Utilities",
+    "Environment :: Console"
+]
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

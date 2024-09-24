@@ -1,3 +1,6 @@
+# v1.0.0
+- Project is now stable.
+
 # v0.8.1
 - fix inheritance error.
 

@@ -9,7 +9,7 @@
     [GitHub](https://github.com/nagataaaas/Iro)
     Powered by [Yamato Nagata](https://twitter.com/514YJ)
     [GitHub](https://github.com/nagataaaas/Iro)
-    :copyright: (c) 2021 by Yamato Nagata.
+    :copyright: (c) 2024 by Yamato Nagata.
     :license: MIT.
 """
 
