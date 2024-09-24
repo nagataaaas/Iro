@@ -1,22 +1,28 @@
+# v0.8.1
+- fix inheritance error.
+
+# v0.8.0
+- `Color`, `Color256`, `ColorRGB`, `Font`, `Style` now inherits `IroElement`
+
 # v0.6.0
 - added `Iro(optimize_level=0)`
 - `Style.RESET` is now public
 - added styles
 
-    OFF_INTENSITY
-    OFF_BOLD
-    OFF_DIM
-    OFF_ITALIC
-    OFF_UNDERLINE
-    OFF_BLINK
-    OFF_INVERT
-    OFF_HIDE
-    OFF_STRIKE
+    `OFF_INTENSITY`
+    `OFF_BOLD`
+    `OFF_DIM`
+    `OFF_ITALIC`
+    `OFF_UNDERLINE`
+    `OFF_BLINK`
+    `OFF_INVERT`
+    `OFF_HIDE`
+    `OFF_STRIKE`
 
-    OFF_COLOR
-    OFF_BG_COLOR
+    `OFF_COLOR`
+    `OFF_BG_COLOR`
     
-    OFF_OVERLINE
+    `OFF_OVERLINE`
 
 # v0.5.0
 - fixed `Color256` not in `__init__.all`

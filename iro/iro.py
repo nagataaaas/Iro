@@ -1,9 +1,18 @@
+import math
+from abc import abstractmethod
+from enum import Enum
+from typing import Iterable, List
 from warnings import warn
 
-from enum import Enum
-import math
 
-from typing import Iterable, List
+class IroElement:
+    @abstractmethod
+    def open(self) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
+    def close(self) -> str:
+        raise NotImplementedError
 
 
 class Iro:
@@ -14,6 +23,44 @@ class Iro:
         self.text = self.painter(text) + Style.RESET.open()
 
     def painter(self, texts: Iterable, given_style=None):
+        if self.optimize_level == 0:
+            return self.unoptimized_paint(texts, given_style)
+        elif self.optimize_level == 1:
+            return self.optimized_paint(texts, given_style)
+        raise ValueError("optimize_level must be 0 or 1.")
+
+    def unoptimized_paint(self, texts: Iterable, given_style=None):
+        if given_style is None:
+            style = []
+        else:
+            style = given_style[:]
+        result = []
+        text_pool = []
+
+        for elem in texts:
+            if isinstance(elem, IroElement):
+                style.append(elem)
+            else:
+                text_pool.append(elem)
+
+        open_style = self.open_styles(style)
+
+        result.append(open_style)
+
+        for text in text_pool:
+            if isinstance(text, str):
+                result.append(text)
+            elif isinstance(text, Iro):
+                result.append(text.text)
+            else:
+                result.append(self.painter(text, style))
+                result.append(open_style)
+
+        result.append(self.close_styles(style))
+
+        return ''.join(result)
+
+    def optimized_paint(self, texts: Iterable, given_style=None):
         if given_style is None:
             """
             1: font, 
@@ -28,107 +75,96 @@ class Iro:
             10: fg_color, 
             11: bg_color
             """
-            if self.optimize_level == 0:
-                given_style = []
-                style = []
-            elif self.optimize_level == 1:
-                given_style = [None] * 11
-                style = [None] * 11
+            given_style = [None] * 11
+            style = [None] * 11
         else:
             style = given_style[:]
         result = []
         text_pool = []
 
         for elem in texts:
-            if isinstance(elem, (Font, Style, Color, Color256, ColorRGB)):
-                if self.optimize_level == 0:
-                    style.append(elem)
-                elif self.optimize_level == 1:
-                    if isinstance(elem, Font):  # FONT
-                        if elem.font_number == 0:
-                            style[0] = None
-                            continue
-                        style[0] = elem
-                    elif elem == Style.BLACKLETTER_FONT:
-                        style[0] = elem
+            if isinstance(elem, IroElement):
+                if isinstance(elem, Font):  # FONT
+                    if elem.font_number == 0:
+                        style[0] = None
+                        continue
+                    style[0] = elem
+                elif elem == Style.BLACKLETTER_FONT:
+                    style[0] = elem
 
-                    elif elem in (Style.BOLD, Style.DIM):  # INTENSITY
-                        style[1] = elem
-                    elif elem in (Style.OFF_BOLD, Style.OFF_DIM, Style.OFF_INTENSITY):
-                        style[1] = None
+                elif elem in (Style.BOLD, Style.DIM):  # INTENSITY
+                    style[1] = elem
+                elif elem in (Style.OFF_BOLD, Style.OFF_DIM, Style.OFF_INTENSITY):
+                    style[1] = None
 
-                    elif elem == Style.ITALIC:  # ITALIC
-                        style[2] = elem
-                    elif elem == Style.OFF_ITALIC:
-                        style[2] = None
+                elif elem == Style.ITALIC:  # ITALIC
+                    style[2] = elem
+                elif elem == Style.OFF_ITALIC:
+                    style[2] = None
 
-                    elif elem in (Style.UNDERLINE, Style.DOUBLY_UNDERLINE):  # UNDERLINE
-                        style[3] = elem
-                    elif elem == Style.OFF_UNDERLINE:
-                        style[3] = None
+                elif elem in (Style.UNDERLINE, Style.DOUBLY_UNDERLINE):  # UNDERLINE
+                    style[3] = elem
+                elif elem == Style.OFF_UNDERLINE:
+                    style[3] = None
 
-                    elif elem in (Style.SLOW_BLINK, Style.RAPID_BLINK):  # BLINK
-                        style[4] = elem
-                    elif elem == Style.OFF_BLINK:
-                        style[4] = None
+                elif elem in (Style.SLOW_BLINK, Style.RAPID_BLINK):  # BLINK
+                    style[4] = elem
+                elif elem == Style.OFF_BLINK:
+                    style[4] = None
 
-                    elif elem == Style.INVERT:  # INVERT
-                        style[5] = elem
-                    elif elem == Style.OFF_INVERT:
-                        style[5] = None
+                elif elem == Style.INVERT:  # INVERT
+                    style[5] = elem
+                elif elem == Style.OFF_INVERT:
+                    style[5] = None
 
-                    elif elem == Style.HIDE:  # HIDE
-                        style[6] = elem
-                    elif elem == Style.OFF_HIDE:
-                        style[6] = None
+                elif elem == Style.HIDE:  # HIDE
+                    style[6] = elem
+                elif elem == Style.OFF_HIDE:
+                    style[6] = None
 
-                    elif elem == Style.STRIKE:  # STRIKE
-                        style[7] = elem
-                    elif elem == Style.OFF_STRIKE:
-                        style[7] = None
+                elif elem == Style.STRIKE:  # STRIKE
+                    style[7] = elem
+                elif elem == Style.OFF_STRIKE:
+                    style[7] = None
 
-                    elif elem == Style.OVERLINE:  # OVERLINE
-                        style[8] = elem
-                    elif elem == Style.OFF_OVERLINE:
-                        style[8] = None
+                elif elem == Style.OVERLINE:  # OVERLINE
+                    style[8] = elem
+                elif elem == Style.OFF_OVERLINE:
+                    style[8] = None
 
-                    elif elem == Style.RESET:  # RESET
-                        style = [None] * 11
+                elif elem == Style.RESET:  # RESET
+                    style = [None] * 11
 
-                    elif elem == Style.OFF_COLOR:  # OFF COLOR
-                        style[9] = None
-                    elif elem == Style.OFF_BG_COLOR:
-                        style[10] = None
+                elif elem == Style.OFF_COLOR:  # OFF COLOR
+                    style[9] = None
+                elif elem == Style.OFF_BG_COLOR:
+                    style[10] = None
 
-                    else:  # COLOR
-                        if isinstance(elem, Color):
-                            if elem.name.startswith('BG_'):
-                                style[10] = elem
-                            else:
-                                style[9] = elem
+                else:  # COLOR
+                    if isinstance(elem, Color):
+                        if elem.name.startswith('BG_'):
+                            style[10] = elem
                         else:
-                            if elem.bg:
-                                style[10] = elem
-                            else:
-                                style[9] = elem
+                            style[9] = elem
+                    else:
+                        if elem.bg:
+                            style[10] = elem
+                        else:
+                            style[9] = elem
             else:
                 text_pool.append(elem)
 
-        open_style = ''
-        if self.optimize_level == 0:
-            open_style = self.open_styles(style)
-        if self.optimize_level == 1:
-            open_styles = []
-            for given, parsed in zip(given_style, style):
-                if parsed is None:
-                    if given is None:
-                        continue
-                    open_styles.append(given.close())
-                else:
-                    if given == parsed:
-                        continue
-                    open_styles.append(parsed.open())
-            open_style = ''.join(open_styles)
+        open_styles = []
+        for given, parsed in zip(given_style, style):
+            if parsed is None:
+                if given is None:
+                    continue
+                open_styles.append(given.close())
+            else:
+                if given == parsed:
+                    continue
+                open_styles.append(parsed.open())
+        open_style = ''.join(open_styles)
 
         result.append(open_style)
 
@@ -139,22 +175,16 @@ class Iro:
                 result.append(text.text)
             else:
                 result.append(self.painter(text, style))
-                if self.optimize_level == 0:
-                    result.append(open_style)
 
-        if self.optimize_level == 0:
-            result.append(self.close_styles(style))
-
-        elif self.optimize_level == 1:
-            for given, parsed in zip(given_style, style):
-                if given is None:
-                    if parsed is None:
-                        continue
-                    result.append(parsed.close())
-                else:
-                    if given == parsed:
-                        continue
-                    result.append(given.open())
+        for given, parsed in zip(given_style, style):
+            if given is None:
+                if parsed is None:
+                    continue
+                result.append(parsed.close())
+            else:
+                if given == parsed:
+                    continue
+                result.append(given.open())
 
         return ''.join(result)
 
@@ -203,7 +233,7 @@ class Iro:
                                                                         self.optimize_level)
 
 
-class Font:
+class Font(IroElement):
     def __init__(self, font_number: int):
         if not isinstance(font_number, int):
             try:
@@ -226,7 +256,7 @@ class Font:
         return 'Font(font_number={})'.format(self.font_number)
 
 
-class Style(Enum):
+class Style(IroElement, Enum):
     RESET = 0
     BOLD = 1
     DIM = 2
@@ -266,7 +296,7 @@ class Style(Enum):
         return '\033[{}m'.format(val.get(self.value, self.value))
 
 
-class Color256:
+class Color256(IroElement):
     color_map = {0: (0x00, 0x00, 0x00), 1: (0x80, 0x00, 0x00), 2: (0x00, 0x80, 0x00), 3: (0x80, 0x80, 0x00),
                  4: (0x00, 0x00, 0x80), 5: (0x80, 0x00, 0x80), 6: (0x00, 0x80, 0x80), 7: (0xc0, 0xc0, 0xc0),
                  8: (0x80, 0x80, 0x80), 9: (0xff, 0x00, 0x00), 10: (0x00, 0xff, 0x00), 11: (0xff, 0xff, 0x00),
@@ -352,7 +382,7 @@ class Color256:
                                                                                self.bg)
 
 
-class ColorRGB:
+class ColorRGB(IroElement):
     def __init__(self, r: int, g: int, b: int, bg: bool = False):
         self.r = round(r)
         self.g = round(g)
@@ -389,7 +419,7 @@ class ColorRGB:
         return 'ColorRGB(r={}, g={}, b={}, bg={})'.format(self.r, self.g, self.b, self.bg)
 
 
-class Color(Enum):
+class Color(IroElement, Enum):
     BLACK = 30
     RED = 31
     GREEN = 32
