@@ -60,10 +60,11 @@ class Iro:
                 result.append(last_child_style_state.diff_sequence(current_style))
                 last_child_style_state = None
 
-            if found_visible:
+            if found_visible and self.sep:
                 if isinstance(self.sep, Iro):
-                    child_paint_result, last_child_style_state = self._paint_child(self.sep, current_style, depth)
+                    child_paint_result, _last_child_style_state = self._paint_child(self.sep, current_style, depth)
                     result.append(child_paint_result)
+                    result.append(_last_child_style_state.diff_sequence(current_style))
                 else:
                     result.append(self.sep)
 
