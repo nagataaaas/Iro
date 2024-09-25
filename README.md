@@ -79,6 +79,7 @@ $ pip install iro
 > However, if you want to render the `Iro` instance inside the other `Iro` instance (as an item of `values` or `sep`), passing the `str` generated with `Iro().text` can cause a problem.
 > ![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture2.png?raw=true)
 > <details><summary>Code</summary>
+>
 > ```python
 > from iro import Iro, FGColor
 > 
@@ -169,6 +170,7 @@ In terms of portability, it is recommended to use `FGColor` and `BGColor` instea
 > 
 > ![capture](https://github.com/nagataaaas/Iro/blob/main/assets/capture3.png?raw=true)
 > <details><summary>Code</summary>
+>
 > ```python
 > fg_normals = [color for color in FGColor if not color.name.startswith("BRIGHT_")]
 > fg_brights = [color for color in FGColor if color.name.startswith("BRIGHT_")]
