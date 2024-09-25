@@ -11,6 +11,8 @@ The depth represents the block and style in the block affects elements within th
 
 ![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture1.png?raw=true)
 
+<details><summary>Code</summary>
+
 ```python
 from iro import Iro, FGColor, BGColor, Style, ColorRGB, Color256
 
@@ -53,8 +55,8 @@ for h in range(256):
 print(Iro([
     "normal", Style.BOLD, "bold", Style.DIM, "bold-dim", Style.OFF_BOLD, "dim", Style.OFF_DIM, Style.BOLD, "bold", FGColor.RED, "red-bold", Style.RESET, "normal"
 ], collect_styles_first=False, sep=Iro(Style.RESET, " ")))
-
 ```
+</details>
 
 # Installation
 ```    
@@ -311,4 +313,4 @@ Let's see how the ANSI escape sequences are optimized.
 \x1b[0m    # RESET
 ```
 
-As you can see, the `Iro` instance will optimize the ANSI escape sequences to reduce the number of characters to be rendered.\
+As you can see, the `Iro` instance will optimize the ANSI escape sequences to reduce the number of characters to be rendered.
