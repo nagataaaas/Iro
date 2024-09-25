@@ -9,6 +9,28 @@ Powered by [Yamato Nagata](https://twitter.com/514YJ)
 
 The depth represents the block and style in the block affects elements within that block.
 
+![output](https://github.com/nagataaaas/Iro/blob/main/assets/loader.gif?raw=true)
+
+<details><summary>Code</summary>
+
+```python
+import time
+from colorsys import hls_to_rgb
+from itertools import count
+
+from iro import Iro, ColorRGB
+
+loading_chars = r"\|/-"
+colors = [ColorRGB(*map(lambda x: x * 255, hls_to_rgb(h / 32, 0.7, 1))) for h in range(32)]
+
+for i in count():
+    print(Iro(colors[i % len(colors)], loading_chars[i % len(loading_chars)],
+              ' Loading!', collect_styles_first=False), end='\r')
+    time.sleep(0.1)
+```
+
+</details>
+
 ![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture1.png?raw=true)
 
 <details><summary>Code</summary>
