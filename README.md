@@ -343,7 +343,7 @@ print(repr(Iro(values).text))
 # '\x1b[31m[RED]\x1b[4m[RED/UNDERLINE]\x1b[1m\x1b[32m[GREEN/UNDERLINE/BOLD]\x1b[7m[GREEN/UNDERLINE/BOLD/INVERT]\x1b[22m[GREEN/UNDERLINE/INVERT]\x1b[1m\x1b[27m[GREEN/UNDERLINE/BOLD]\x1b[22m\x1b[31m[RED/UNDERLINE]\x1b[0m'
 ```
 
-Let's see how the ANSI escape sequences are optimized.
+here is the pretty-printed version of the above string.
 
 ```text
 \x1b[31m   # FG_RED
