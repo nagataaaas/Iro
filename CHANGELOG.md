@@ -1,5 +1,6 @@
 # v1.0.0
 - Project is now stable.
+- This version has almost no compatibility between previous versions.
 
 # v0.8.1
 - fix inheritance error.
