@@ -376,7 +376,7 @@ This behavior prohibits the style from being changed in the middle of the same n
 
 However, you can disable this behavior by setting `collect_styles_first` to `False`.
 
-![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture4.png?raw=true)
+![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture5.png?raw=true)
 
 ```python
 from iro import Iro, FGColor, Style
