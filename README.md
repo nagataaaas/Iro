@@ -63,10 +63,12 @@ $ pip install iro
 
 # Documentation
 ## `Iro(*values: Any, disable_rgb: bool = True, sep: str | Iro = "", collect_styles_first: bool = True)`
-- values: `Any` values that will be rendered. `Iro`, `IroElement`, `str`, `int`, `float`, `list`, `tuple`, `dict`, etc.
-- disable_rgb: if `True`, `ColorRGB` will be converted to similar color of `Color256`. This is for supporting some consoles that does not support `ColorRGB`.
-- sep: separator between elements. If `str` is given, it will be rendered as it is. If `Iro` is given, it will be rendered like it's part of the `values`. This will be rendered between non-style values.
-- collect_styles_first: if `True`, all styles in the nest depth will be collected before rendering non-style elements. If `False`, styles will be rendered as they are found.
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `values` | `Any` | values that will be rendered. `Iro`, `IroElement`, `str`, `int`, `float`, `list`, `tuple`, `dict`, etc. |
+| `disable_rgb` | `bool` | if `True`, `ColorRGB` will be converted to similar color of `Color256`. This is for supporting some consoles that does not support `ColorRGB`. |
+| `sep` | `str` or `Iro` | separator between elements. If `str` is given, it will be rendered as it is. If `Iro` is given, it will be rendered like it's part of the `values`. This will be rendered between non-style values. |
+| `collect_styles_first` | `bool` | if `True`, all styles in the nest depth will be collected before rendering non-style elements. If `False`, styles will be rendered as they are found. |
 
 `Iro().text` or `Iro().str` to fetch result. 
 
@@ -101,37 +103,42 @@ Get rendered string.
 ## `Style`
 Enum of defined `Style`.
 
-- `RESET`: Reset all styles. including color and background color.
-- `BOLD`: Bold or increased intensity.
-- `DIM`: Faint, decreased intensity, or dim. in some terminals, this may be implemented as a light font weight and this overrides `BOLD`.
-- `ITALIC`: Italic. Not widely supported. Sometimes treated as inverse.
-- `UNDERLINE`: Underline.
-- `SLOW_BLINK`: Slow Blink.
-- `RAPID_BLINK`: Rapid Blink. Not widely supported.
-- `INVERT`: Invert foreground and background colors.
-- `HIDE`: Hide text. Not widely supported.
-- `STRIKE`: Strikethrough.
-- `OVERLINE`: Overline. Not widely supported.
-- `GOTHIC`: Gothic. Rarely supported.
-- `DOUBLY_UNDERLINE`: Double underline. Rarely supported.
+| Style              | Description                                                                                                                     |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| `RESET`            | Reset all styles. including color and background color.                                                                         |
+| `NORMAL`           | Alias of `RESET`.                                                                                                               |
+| `BOLD`             | Bold or increased intensity.                                                                                                    |
+| `DIM`              | Faint, decreased intensity, or dim. in some terminals, this may be implemented as a light font weight and this overrides `BOLD`. |
+| `ITALIC`           | Italic. Not widely supported. Sometimes treated as inverse.                                                                     |
+| `UNDERLINE`        | Underline.                                                                                                                      |
+| `SLOW_BLINK`       | Slow Blink.                                                                                                                     |
+| `RAPID_BLINK`      | Rapid Blink. Not widely supported.                                                                                              |
+| `INVERT`           | Invert foreground and background colors.                                                                                        |
+| `HIDE`             | Hide text. Not widely supported.                                                                                                |
+| `STRIKE`           | Strikethrough.                                                                                                                  |
+| `OVERLINE`         | Overline. Not widely supported.                                                                                                 |
+| `GOTHIC`           | Gothic. Rarely supported.                                                                                                       |
+| `DOUBLY_UNDERLINE` | Double underline. Rarely supported.                                                                                             |
 
 and `OFF_*` styles to disable each style.
 
-- `OFF_BOLD`: Disable `BOLD`.
-- `OFF_DIM`: Disable `DIM`.
-- `OFF_ITALIC`: Disable `ITALIC`.
-- `OFF_UNDERLINE`: Disable `UNDERLINE`.
-- `OFF_INVERT`: Disable `INVERT`.
-- `OFF_HIDE`: Disable `HIDE`.
-- `OFF_STRIKE`: Disable `STRIKE`.
-- `OFF_OVERLINE`: Disable `OVERLINE`.
-- `OFF_GOTHIC`: Disable `GOTHIC`.
-- `OFF_DOUBLY_UNDERLINE`: Disable `DOUBLY_UNDERLINE`.
-- `OFF_FONT`: Reset font to default.
-- `OFF_INTENSITY`: Disable `BOLD` and `DIM`.
-- `OFF_BLINK`: Disable `SLOW_BLINK` and `RAPID_BLINK`.
-- `OFF_FG_COLOR`: Disable foreground color.
-- `OFF_BG_COLOR`: Disable background color.
+| Style | Description                                                                                                                      |
+| --- |----------------------------------------------------------------------------------------------------------------------------------|
+| `OFF_BOLD` | Disable `BOLD`.                                                                                                                  |
+| `OFF_DIM` | Disable `DIM`.                                                                                                                   |
+| `OFF_ITALIC` | Disable `ITALIC`.                                                                                                                |
+| `OFF_UNDERLINE` | Disable `UNDERLINE`.                                                                                                             |
+| `OFF_INVERT` | Disable `INVERT`.                                                                                                                |
+| `OFF_HIDE` | Disable `HIDE`.                                                                                                                  |
+| `OFF_STRIKE` | Disable `STRIKE`.                                                                                                                |
+| `OFF_OVERLINE` | Disable `OVERLINE`.                                                                                                              |
+| `OFF_GOTHIC` | Disable `GOTHIC`.                                                                                                                |
+| `OFF_DOUBLY_UNDERLINE` | Disable `DOUBLY_UNDERLINE`.                                                                                                      |
+| `OFF_FONT` | Reset font to default.                                                                                                           |
+| `OFF_INTENSITY` | Disable `BOLD` and `DIM`.                                                                                                        |
+| `OFF_BLINK` | Disable `SLOW_BLINK` and `RAPID_BLINK`.                                                                                          |
+| `OFF_FG_COLOR` | Reset foreground color.                                                                                                          |
+| `OFF_BG_COLOR` | Reset background color.                                                                                                          |
 
 
 ## `FGColor`, `BGColor`
@@ -139,23 +146,18 @@ Enum of 3-bit and 4-bit color.
 
 `FGColor` is for foreground color, and `BGColor` is for background color.
 
-- `BLACK` 
-- `RED` 
-- `GREEN` 
-- `YELLOW` 
-- `BLUE` 
-- `MAGENTA` 
-- `CYAN` 
-- `WHITE` 
+Both `FGColor` and `BGColor` have the same color Enum values.
 
-- `BRIGHT_BLACK` 
-- `BRIGHT_RED` 
-- `BRIGHT_GREEN` 
-- `BRIGHT_YELLOW` 
-- `BRIGHT_BLUE` 
-- `BRIGHT_MAGENTA` 
-- `BRIGHT_CYAN` 
-- `BRIGHT_WHITE` 
+| normal | bright |
+| --- | --- |
+| `BLACK` | `BRIGHT_BLACK` |
+| `RED` | `BRIGHT_RED` |
+| `GREEN` | `BRIGHT_GREEN` |
+| `YELLOW` | `BRIGHT_YELLOW` |
+| `BLUE` | `BRIGHT_BLUE` |
+| `MAGENTA` | `BRIGHT_MAGENTA` |
+| `CYAN` | `BRIGHT_CYAN` |
+| `WHITE` | `BRIGHT_WHITE` |
 
 > [!TIP]
 > Actual color may vary depending on the terminal.
@@ -202,7 +204,7 @@ These Colors are supported in most terminals.\
 
 In terms of portability, it is recommended to use `FGColor` and `BGColor` instead of `ColorRGB` and `Color256`.
 
-## Color256(number: int, bg: bool = False)
+## `Color256(number: int, bg: bool = False)`
 - number: number of pre-defined 8-bit color. `0 <= number <= 255`
 - bg: if `True`, This color will be applied to background.
 
@@ -212,28 +214,36 @@ In terms of portability, it is recommended to use `FGColor` and `BGColor` instea
 > ![color256](https://github.com/nagataaaas/Iro/blob/main/assets/256.png?raw=true)
 > image from [https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit)
 
-## ColorRGB(r: int, g: int, b: int, bg: bool = False)
-- r, g, b: value of RGB. if `float` is given, number will be `round`ed. `0 <= number <= 255`
-- bg: if `True`, This color will be applied to background.
+## `ColorRGB(r: int, g: int, b: int, bg: bool = False)`
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `r` | `int` or `float` | value of Red. `0 <= number <= 255` |
+| `g` | `int` or `float` | value of Green. `0 <= number <= 255` |
+| `b` | `int` or `float` | value of Blue. `0 <= number <= 255` |
+| `bg` | `bool` | if `True`, This color will be applied to background. |
 
-### ColorRGB.from_color_code(color_code: str, bg: bool = False) -> ColorRGB
-- color_code: `str` that matches to regex `#?[0-9a-fA-F]{6}`
-- bg: if `True`, This color will be applied to background.
+### `ColorRGB.from_color_code(color_code: str, bg: bool = False) -> ColorRGB`
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `color_code` | `str` | color code. `#?[0-9a-fA-F]{6}` |
+| `bg` | `bool` | if `True`, This color will be applied to background. |
 
-## Font(font_number: int)
-- font_number: number of font. `0` is default font. up to `10`.
+## `Font(font_number: int)`
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `font_number` | `int` | number of font. `0` is default font. up to `10`. |
 
 # Q&A
-### My `ColorRGB` and `Color256` is not working!
+### Q: My `ColorRGB` and `Color256` is not working!
 The problem is most likely caused by the console not supporting it. Try another console or consider using `FGColor` and `BGColor`.
 
-### My `ColorRGB` is not the color that I specified!
+### Q: My `ColorRGB` is not the color that I specified!
 If `disable_rgb` is `True`, `Iro` will convert every `ColorRGB` to similar `Color256`. Make sure `disable_rgb` is set to `False`.
 
-### Coloring, Styling and Fonts are not working!
+### Q: Coloring, Styling and Fonts are not working!
 Not all styles are supported by all consoles. Try another console.
 
-### Weird string like `･[0m･[0m･[5m･[48;2;168;102;255m ･[0m･[0m･[5m` are showing up and not working at all!
+### Q: Weird string like `･[0m･[0m･[5m･[48;2;168;102;255m ･[0m･[0m･[5m` are showing up and not working at all!
 Your console is not supporting ANSI escape sequences. Try another console. Or, you can try `colorama`.\
 insert this code below in your Script
 ```python
@@ -241,7 +251,7 @@ from colorama import init
 init()
 ```
     
-### How effective is optimization?
+### Q: How effective is optimization?
 ok, Let me show some codes and screenshot.
 ```python
 from iro import Iro, FGColor, Style
