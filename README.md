@@ -9,6 +9,8 @@ Powered by [Yamato Nagata](https://twitter.com/514YJ)
 
 The depth represents the block and style in the block affects elements within that block.
 
+![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture1.png?raw=true)
+
 ```python
 from iro import Iro, FGColor, BGColor, Style, ColorRGB, Color256
 
@@ -53,8 +55,6 @@ print(Iro([
 ], collect_styles_first=False, sep=Iro(Style.RESET, " ")))
 
 ```
-**output**
-![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture1.png?raw=true)
 
 # Installation
 ```    
