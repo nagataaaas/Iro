@@ -16,14 +16,16 @@
 import locale
 
 from .__about__ import __version__
-from .iro import (Iro, Color, Style, ColorRGB, Color256, Font, IroElement)
+from .iro import Iro
+from .styles import FGColor, BGColor, ColorRGB, Color256, Font, IroElement, Style
 
 locale.setlocale(locale.LC_ALL, '')
 
 __all__ = [
     "__version__",
     "Iro",
-    "Color",
+    "FGColor",
+    "BGColor",
     "Style",
     "ColorRGB",
     "Color256",
