@@ -46,6 +46,7 @@ class Font(IroElement):
 
 class Style(IroElement, Enum):
     RESET = (0, 0)
+    NORMAL = (0, 0)
 
     BOLD = (1, 22)
     DIM = (2, 22)

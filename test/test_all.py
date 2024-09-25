@@ -181,3 +181,7 @@ class Test:
                                   f"{Style.BOLD.open}{Style.DIM.open} bold-dim"
                                   f"{Style.DIM.close}{Style.BOLD.open} bold"
                                   f"{Style.RESET.open}")
+
+    class TestStyle:
+        def test_normal_reset_integrity(self):
+            assert Style.RESET is Style.NORMAL
