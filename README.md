@@ -80,6 +80,7 @@ $ pip install iro
 `Iro().text` or `Iro().str` to fetch result.
 
 > [!NOTE]
+> 
 > Each time you try to get `Iro().text`, `Iro().str` or `str(Iro())`, it will be rendered again.\
 > So if you want to use it multiple times, storing the result in a variable is recommended.
 >
@@ -178,6 +179,7 @@ In terms of portability, it is recommended to use `FGColor` and `BGColor` instea
 | `WHITE`   | `BRIGHT_WHITE`   |
 
 > [!TIP]
+> 
 > Actual color may vary depending on the terminal.
 > here's an example of how it looks in the terminal. (Capture from `Windows Terminal`)
 >
@@ -225,6 +227,7 @@ In terms of portability, it is recommended to use `FGColor` and `BGColor` instea
 - bg: if `True`, This color will be applied to background.
 
 > [!TIP]
+> 
 > Color number is defined as below.
 >
 > ![color256](https://github.com/nagataaaas/Iro/blob/main/assets/256.png?raw=true)
