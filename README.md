@@ -77,6 +77,8 @@ $ pip install iro
 > So if you want to use it multiple times, storing the result in a variable is recommended.
 > 
 > However, if you want to render the `Iro` instance inside the other `Iro` instance (as an item of `values` or `sep`), passing the `str` generated with `Iro().text` can cause a problem.
+> ![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture2.png?raw=true)
+> <details><summary>Code</summary>
 > ```python
 > from iro import Iro, FGColor
 > 
@@ -87,7 +89,7 @@ $ pip install iro
 > print(Iro(FGColor.RED, "red", blue_and_str, "red"))
 > print(Iro(FGColor.RED, "red", "red", sep=blue_and_str))
 > ```
-> ![output](https://github.com/nagataaaas/Iro/blob/main/assets/capture2.png?raw=true)
+> </details>
 > 
 > This is because of 2 reasons.\
 > 1st, `Iro` instance can detect other `Iro` instance to be rendered as part of it, and render only style diff before and after the recursive rendering.\
@@ -145,8 +147,10 @@ and `OFF_*` styles to disable each style.
 Enum of 3-bit and 4-bit color.
 
 `FGColor` is for foreground color, and `BGColor` is for background color.
-
 Both `FGColor` and `BGColor` have the same color Enum values.
+
+These Colors are supported in most terminals.
+In terms of portability, it is recommended to use `FGColor` and `BGColor` instead of `ColorRGB` and `Color256`.
 
 | normal | bright |
 | --- | --- |
@@ -161,9 +165,10 @@ Both `FGColor` and `BGColor` have the same color Enum values.
 
 > [!TIP]
 > Actual color may vary depending on the terminal.
-> 
 > here's an example of how it looks in the terminal. (Capture from `Windows Terminal`)
 > 
+> ![capture](https://github.com/nagataaaas/Iro/blob/main/assets/capture3.png?raw=true)
+> <details><summary>Code</summary>
 > ```python
 > fg_normals = [color for color in FGColor if not color.name.startswith("BRIGHT_")]
 > fg_brights = [color for color in FGColor if color.name.startswith("BRIGHT_")]
@@ -197,12 +202,8 @@ Both `FGColor` and `BGColor` have the same color Enum values.
 >           ),
 >           sep="\n", collect_styles_first=False))
 > ```
-> ![capture](https://github.com/nagataaaas/Iro/blob/main/assets/capture2.png?raw=true)
+> </details>
 
-
-These Colors are supported in most terminals.\
-
-In terms of portability, it is recommended to use `FGColor` and `BGColor` instead of `ColorRGB` and `Color256`.
 
 ## `Color256(number: int, bg: bool = False)`
 - number: number of pre-defined 8-bit color. `0 <= number <= 255`
