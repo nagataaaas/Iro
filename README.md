@@ -24,8 +24,7 @@ loading_chars = r"\|/-"
 colors = [ColorRGB(*map(lambda x: x * 255, hls_to_rgb(h / 32, 0.7, 1))) for h in range(32)]
 
 for i in count():
-    print(Iro(colors[i % len(colors)], loading_chars[i % len(loading_chars)],
-              ' Loading!', collect_styles_first=False), end='\r')
+    print(Iro(colors[i % len(colors)], loading_chars[i % len(loading_chars)], ' Loading!'), end='\r')
     time.sleep(0.1)
 ```
 
